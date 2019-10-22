@@ -1,0 +1,59 @@
+name:                shortlink
+version:             0.1.0.0
+github:              "Github GheorgheP/shortlink"
+license:             BSD3
+author:              "Gheorghe"
+maintainer:          "pisarenco.gh@gmail.com"
+copyright:           "2019 Pisarenco Gheorghe"
+
+extra-source-files:
+  - README.md
+  - ChangeLog.md
+
+# Metadata used when publishing your package
+# synopsis:            Small webservice for generating shortlinks
+# category:            WEB
+
+# To avoid duplicated efforts in documentation and dealing with the
+# complications of embedding Haddock markup inside cabal files, it is
+# common to point users to the README.md file.
+description:         Please see the README on GitHub at <https://github.com/GheorgheP/shortlink#readme>
+
+dependencies:
+  - base >= 4.7 && < 5
+
+library:
+  source-dirs: src
+  dependencies:
+    - random
+    - regex-compat
+    - text
+    - mysql-haskell
+    - io-streams
+    - network
+    - bytestring
+
+executables:
+  shortlink-exe:
+    main:                Main.hs
+    source-dirs:         app
+    ghc-options:
+      - -threaded
+      - -rtsopts
+      - -with-rtsopts=-N
+    dependencies:
+      - shortlink
+      - scotty
+      - text
+      - http-types
+
+tests:
+  shortlink-test:
+    main:                Spec.hs
+    source-dirs:         test
+    ghc-options:
+      - -threaded
+      - -rtsopts
+      - -with-rtsopts=-N
+    dependencies:
+      - shortlink
