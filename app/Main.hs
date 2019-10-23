@@ -9,19 +9,18 @@ import           Data.Monoid               (mconcat)
 import           Data.String
 import           Data.Text.Lazy            (pack)
 import qualified DB
+import           Env                       (getEnvNum)
 import           GHC.Exception             (Exception)
 import           GHC.Exception.Type        (displayException)
-import           Helpers                   (readPort)
 import           Network.HTTP.Types        (status400, status404, status500)
 import           RandomHash                (randHash)
 import qualified ShortLink.Classes.Storage as S
-import           System.Environment        (getEnv)
 import           Url                       (toUrl)
 import qualified Web.Scotty                as S
 
 main :: IO ()
 main = do
-  appPort <- readPort =<< getEnv "APP_PORT"
+  appPort <- getEnvNum "APP_PORT"
   conn <- DB.storage
   S.scotty appPort $ do
     S.get "/" $ S.html "<h1>Salutare</h1>"
