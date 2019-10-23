@@ -11,17 +11,19 @@ import           Data.Text.Lazy            (pack)
 import qualified DB
 import           GHC.Exception             (Exception)
 import           GHC.Exception.Type        (displayException)
+import           Helpers                   (readPort)
 import           Network.HTTP.Types        (status400, status404, status500)
 import           RandomHash                (randHash)
 import qualified ShortLink.Classes.Storage as S
-import qualified System.IO.Streams         as Stream
+import           System.Environment        (getEnv)
 import           Url                       (toUrl)
 import qualified Web.Scotty                as S
 
 main :: IO ()
 main = do
+  appPort <- readPort =<< getEnv "APP_PORT"
   conn <- DB.storage
-  S.scotty 3000 $ do
+  S.scotty appPort $ do
     S.get "/" $ S.html "<h1>Salutare</h1>"
     S.get "/api/url/:hash" $ do
       hash <- S.param "hash"
