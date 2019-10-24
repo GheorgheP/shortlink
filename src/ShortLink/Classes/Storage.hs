@@ -4,7 +4,8 @@ module ShortLink.Classes.Storage
   , addUrl
   ) where
 
-import           ShortLink.Types.Base (Hash, Url)
+import           ShortLink.Types.Base (Hash)
+import           ShortLink.Types.Url  (Url)
 
 class Storage a where
   getUrl :: Hash -> a -> IO (Maybe Url)

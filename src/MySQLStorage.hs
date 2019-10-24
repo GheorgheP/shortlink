@@ -10,6 +10,7 @@ import qualified Database.MySQL.Base       as MSQL
 import           Network.Socket            (HostName, PortNumber)
 import qualified ShortLink.Classes.Storage as Classes
 import qualified ShortLink.Types.Base      as Base
+import qualified ShortLink.Types.Url       as URL
 import           System.IO.Streams         (InputStream)
 import qualified System.IO.Streams         as Streams
 
@@ -66,7 +67,8 @@ instance Classes.Storage Storage
   --
      where
   getUrl hash (Storage conn) =
-    (unpackUrl =<<) . (mHead =<<) <$> (Streams.read =<< snd <$> query byHashQuery [textParam hash] conn)
+    (URL.toUrl =<<) . (unpackUrl =<<) . (mHead =<<) <$>
+    (Streams.read =<< snd <$> query byHashQuery [textParam hash] conn)
   -- | Insert new url in the database
   --
-  addUrl hash url (Storage conn) = () <$ exec insertQuery [textParams [hash, url]] conn
+  addUrl hash url (Storage conn) = () <$ exec insertQuery [textParams [hash, URL.toString url]] conn

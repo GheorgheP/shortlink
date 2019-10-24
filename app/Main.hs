@@ -15,7 +15,7 @@ import           GHC.Exception.Type        (displayException)
 import           Network.HTTP.Types        (status400, status404, status500)
 import           RandomHash                (randHash)
 import qualified ShortLink.Classes.Storage as Storage
-import           Url                       (toUrl)
+import qualified ShortLink.Types.Url       as URL
 import qualified Web.Scotty                as S
 
 main :: IO ()
@@ -28,7 +28,7 @@ main = do
       hash <- S.param "hash"
       handle showURL $ Storage.getUrl hash conn
     S.get "/api/add/:url" $ do
-      url <- toUrl <$> S.param "url"
+      url <- URL.toUrl <$> S.param "url"
       case url of
         Nothing -> S.status status400 >> S.text "Invalid URL"
         (Just url) -> do
@@ -58,6 +58,6 @@ handle f io = do
     Left e  -> S.status status500 >> (S.text . pack . displayException) e
     Right a -> f a
 
-showURL :: Maybe String -> S.ActionM ()
-showURL (Just url) = S.text $ pack url
+showURL :: Maybe URL.Url -> S.ActionM ()
+showURL (Just url) = (S.text . pack . URL.toString) url
 showURL _          = S.status status404 >> S.text "Not matching URL found"
